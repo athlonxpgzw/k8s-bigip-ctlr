@@ -813,6 +813,7 @@ func initController(
 			IPAM:               *ipam,
 			ShareNodes:         *shareNodes,
 			DefaultRouteDomain: *defaultRouteDomain,
+			VsSnatPoolName:     *vsSnatPoolName,
 		},
 	)
 

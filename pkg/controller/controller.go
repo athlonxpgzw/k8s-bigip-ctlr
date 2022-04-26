@@ -111,6 +111,7 @@ func NewController(params Params) *Controller {
 		shareNodes:         params.ShareNodes,
 		eventNotifier:      apm.NewEventNotifier(nil),
 		defaultRouteDomain: params.DefaultRouteDomain,
+		vsSnatPoolName:     params.VsSnatPoolName,
 	}
 
 	log.Debug("Custom Resource Manager Created")
