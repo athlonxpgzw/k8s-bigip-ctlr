@@ -20,11 +20,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"net"
 	"sort"
 	"strconv"
 	"strings"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	cisapiv1 "github.com/F5Networks/k8s-bigip-ctlr/config/apis/cis/v1"
 	log "github.com/F5Networks/k8s-bigip-ctlr/pkg/vlogger"
@@ -54,6 +55,9 @@ const (
 	DEFAULT_HTTP_PORT  int32  = 80
 	DEFAULT_HTTPS_PORT int32  = 443
 	DEFAULT_SNAT       string = "auto"
+
+	DefaultSourceAddrTranslation = "automap"
+	SnatSourceAddrTranslation    = "snat"
 
 	urlRewriteRulePrefix      = "url-rewrite-rule-"
 	appRootForwardRulePrefix  = "app-root-forward-rule-"
@@ -1216,10 +1220,23 @@ func (ctlr *Controller) prepareRSConfigFromLBService(
 	}
 	rsCfg.Pools = Pools{pool}
 	rsCfg.Virtual.PoolName = poolName
-	rsCfg.Virtual.SNAT = DEFAULT_SNAT
+	//rsCfg.Virtual.SNAT = DEFAULT_SNAT
+	rsCfg.Virtual.SourceAddrTranslation = SetSourceAddrTranslation(ctlr.vsSnatPoolName)
 	rsCfg.Virtual.Mode = "standard"
 
 	return nil
+}
+
+func SetSourceAddrTranslation(snatPoolName string) SourceAddrTranslation {
+	if snatPoolName == "" {
+		return SourceAddrTranslation{
+			Type: DefaultSourceAddrTranslation,
+		}
+	}
+	return SourceAddrTranslation{
+		Type: SnatSourceAddrTranslation,
+		Pool: snatPoolName,
+	}
 }
 
 // Returns Partition and resourceName

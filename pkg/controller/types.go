@@ -67,6 +67,7 @@ type (
 		defaultRouteDomain int
 		TeemData           *teem.TeemsData
 		requestQueue       *requestQueue
+		vsSnatPoolName     string
 	}
 
 	// Params defines parameters
@@ -85,6 +86,7 @@ type (
 		ShareNodes         bool
 		IPAM               bool
 		DefaultRouteDomain int
+		VsSnatPoolName     string
 	}
 
 	// CRInformer defines the structure of Custom Resource Informer
